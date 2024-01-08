@@ -13,15 +13,16 @@ namespace Managers
         public static LoadPhase LastPhase    { get; private set; }
         
         private static readonly Dictionary<LoadPhase, List<AsyncLazy>> initTaskDictionary       = new();
-        private static readonly Dictionary<LoadPhase, AsyncLazy> StartTaskDictionary = new();   
+        private static readonly Dictionary<LoadPhase, AsyncLazy> startTaskDictionary = new();   
         
         public async UniTaskVoid Init()
         {
-            AddressablesManager.Instance.Init();
-            SaveManager.Instance.Init();
-            WindowManager.Instance.Init();
-            PathfindingManager.Instance.Init();
-            MovingUnitsManager.Instance.Init();
+            AddressablesManager.Instance.AddToLoad();
+            SaveSOManager.Instance.AddToLoad();
+            SaveManager.Instance.AddToLoad();
+            WindowManager.Instance.AddToLoad();
+            PathfindingManager.Instance.AddToLoad();
+            MovingUnitsManager.Instance.AddToLoad();
 
             LoadPhase[] allPhases = (LoadPhase[])Enum.GetValues(typeof(LoadPhase));
             foreach (var phase in allPhases)
@@ -41,9 +42,9 @@ namespace Managers
 
         public static AsyncLazy WaitUntilPhaseStarted(LoadPhase phase)
         {
-            if (StartTaskDictionary.TryGetValue(phase, out var task))
+            if (startTaskDictionary.TryGetValue(phase, out var task))
                 return task;
-            return StartTaskDictionary[phase] =
+            return startTaskDictionary[phase] =
                 UniTask.WaitUntil(() => CurrentPhase >= phase, cancellationToken: Instance.destroyCancellationToken).ToAsyncLazy();
         }
         

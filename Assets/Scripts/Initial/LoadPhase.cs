@@ -4,6 +4,7 @@ namespace Initial
     {
         Save,
         Addressable,
-        Managers
+        Managers,
+        Windows
     }
 }

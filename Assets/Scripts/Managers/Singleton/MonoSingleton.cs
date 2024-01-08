@@ -1,9 +1,13 @@
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Managers.Singleton
 {
     public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
     {
+        protected CancellationToken destroyToken;
+        
         public static T Instance
         {
             get
@@ -25,6 +29,7 @@ namespace Managers.Singleton
             go.transform.SetParent(ManagerHolder.Holder);
 
             instance = go.AddComponent<T>();
+            instance.destroyToken = go.GetCancellationTokenOnDestroy();
         }
     }
 }

@@ -4,18 +4,14 @@ namespace Managers
 {
     public class ManagerHolder : MonoBehaviour
     {
-        private static Transform holder;
-        public static Transform Holder => holder;
+        public static Transform Holder { get; private set; }
 
         private void Awake()
         {
-            holder = transform;
+            Holder = transform;
             DontDestroyOnLoad(gameObject);
         }
 
-        private void Start()
-        {
-            InitManager.Instance.Init();
-        }
+        private void Start() => InitManager.Instance.Init().Forget();
     }
 }

@@ -16,7 +16,13 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 5f317222029351b488d8bda098945460
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: ee90aa1288b9c8c4b90f24c658768774
+    m_Address: Assets/Res/Assets/SpritesSO.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MainAssets
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 6798eae19ae469a439e4a78f141c81c3, type: 2}
   m_SchemaSet:

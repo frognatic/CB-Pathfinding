@@ -17,7 +17,7 @@ namespace Managers
         
         public async UniTaskVoid Init()
         {
-            AddressablesManager.Instance.AddToLoad();
+            AddressableManager.Instance.AddToLoad();
             SaveSOManager.Instance.AddToLoad();
             SaveManager.Instance.AddToLoad();
             WindowManager.Instance.AddToLoad();

@@ -12,3 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da659193a336e4a47ad887a0d3b05906, type: 3}
   m_Name: ScriptableSave
   m_EditorClassIdentifier: 
+  save:
+    movingUnitState:
+      movingUnitsData: []

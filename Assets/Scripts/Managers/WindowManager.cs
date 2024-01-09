@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Initial;
 using Managers.Singleton;
+using UI.Windows.Base;
 using UnityEngine;
 
 namespace Managers
@@ -16,7 +17,7 @@ namespace Managers
         {
             await InitManager.WaitUntilPhaseStarted(LoadPhase.Windows);
             await UniTask.WaitUntil(() => windowList.Count > 0, cancellationToken: Instance.destroyCancellationToken).ToAsyncLazy();
-            Debug.LogWarning("TEST");
+            
             OpenWindow(WindowType.MainWindow);
         }
 

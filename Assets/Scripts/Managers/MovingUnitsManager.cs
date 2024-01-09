@@ -13,5 +13,9 @@ namespace Managers
             await InitManager.WaitUntilPhaseStarted(LoadPhase.Managers);
             // spawn default players etc.
         }
+
+        public void LoadUnits() {}
+
+        public void SetUnitAsLeader() {}
     }
 }

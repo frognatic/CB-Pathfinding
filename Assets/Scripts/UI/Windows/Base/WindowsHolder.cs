@@ -1,27 +1,26 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Managers;
-using UI.Windows.Base;
+using NaughtyAttributes;
 using UnityEngine;
 
-public class WindowsHolder : MonoBehaviour
+namespace UI.Windows.Base
 {
-    [SerializeField] private List<Window> windows;
-
-    private void Start()
+    public class WindowsHolder : MonoBehaviour
     {
-        AddWindowsToManagerList();
-    }
+        [SerializeField] private List<Window> windows;
 
-    public void AddWindowsToManagerList()
-    {
-        foreach (var window in windows)
+        private void Start() => AddWindowsToManagerList();
+
+        private void AddWindowsToManagerList()
         {
-            WindowManager.Instance.AddWindow(window);
+            foreach (var window in windows)
+            {
+                WindowManager.Instance.AddWindow(window);
+            }
         }
-    }
     
-    [ContextMenu("Refill list")]
-    public void RefillList() => windows = GetComponentsInChildren<Window>().ToList();
+        [Button("Refill List")]
+        private void RefillList() => windows = GetComponentsInChildren<Window>().ToList();
+    }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Pathfinding
@@ -20,6 +21,7 @@ namespace Pathfinding
 
             gridSize = new Vector2Int(gridX, gridY);
             CreateGrid();
+            FillAllNeighbours();
         }
 
         private void CreateGrid()
@@ -34,7 +36,33 @@ namespace Pathfinding
                     Vector3 worldPoint = worldBottomLeftVector + Vector3.right * (x * NodeDiameter + nodeRadius) +
                                          Vector3.forward * (y * NodeDiameter + nodeRadius);
                     bool isWalkable = !Physics.CheckSphere(worldPoint, nodeRadius, obstacleMask);
-                    grid[x, y] = new PathfindingNode(isWalkable, worldPoint);
+
+                    Vector2Int gridPosition = new Vector2Int(x, y);
+                    grid[x, y] = new PathfindingNode(isWalkable, worldPoint, gridPosition);
+                }
+            }
+        }
+
+        private void FillAllNeighbours()
+        {
+            foreach (var node in grid)
+                FillNeighboursList(node);
+        }
+
+        private void FillNeighboursList(PathfindingNode node)
+        {
+            for (int x = -1; x <= 1; x++)
+            {
+                for (int y = -1; y <= 1; y++)
+                {
+                    if (x == 0 && y == 0) 
+                        continue;
+
+                    int checkX = node.GridPosition.x + x;
+                    int checkY = node.GridPosition.y + y;
+
+                    if (checkX >= 0 && checkX < gridSize.x && checkY >= 0 && checkY < gridSize.y)
+                        node.AddNeighbour(grid[checkX, checkY]);
                 }
             }
         }
@@ -44,15 +72,12 @@ namespace Pathfinding
 
         public PathfindingNode GetNode(Vector3 worldPosition)
         {
-            float percentX = (worldPosition.x + gridWorldSize.x * 0.5f) / gridWorldSize.x;
-            float percentY = (worldPosition.z + gridWorldSize.y * 0.5f) / gridWorldSize.y;
+            float percentX = (worldPosition.x + gridWorldSize.x / 2) / gridWorldSize.x;
+            float percentY = (worldPosition.z + gridWorldSize.y / 2) / gridWorldSize.y;
 
-            percentX = Mathf.Clamp01(percentX);
-            percentY = Mathf.Clamp01(percentY);
-
-            int x = Mathf.RoundToInt((gridSize.x - 1) * percentX);
-            int y = Mathf.RoundToInt((gridSize.y - 1) * percentY);
-
+            int x = Mathf.FloorToInt(Mathf.Clamp(gridSize.x * percentX, 0, gridSize.x - 1));
+            int y = Mathf.RoundToInt(Mathf.Clamp(gridSize.y * percentY + 1, 0, gridSize.y - 1));
+            
             return grid[x, y];
         }
 
@@ -72,14 +97,15 @@ namespace Pathfinding
             Gizmos.DrawWireCube(transform.position, size);
         }
 
+
         private void DrawNodeGizmos()
         {
             if (grid == null) return;
 
             foreach (PathfindingNode node in grid)
             {
-                Gizmos.color = node.isWalkable ? Color.green : Color.red;
-                Gizmos.DrawCube(node.worldPosition, Vector3.one * (NodeDiameter - 0.1f));
+                Gizmos.color = node.IsWalkable ? Color.green : Color.red;
+                Gizmos.DrawCube(node.WorldPosition, Vector3.one * (NodeDiameter - 0.1f));
             }
         }
     }

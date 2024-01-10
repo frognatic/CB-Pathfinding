@@ -16,6 +16,8 @@ namespace Pathfinding
         public PathfindingNode PreviousNode => previousNode;
         public List<PathfindingNode> NeighboursList { get; } = new();
 
+        public string ID => $"Grid position [{GridPosition.x} {GridPosition.y}] || World position [{WorldPosition.x} {WorldPosition.y} {WorldPosition.z}]";
+
         public PathfindingNode(bool isWalkable, Vector3 worldPosition, Vector2Int gridPosition)
         {
             IsWalkable = isWalkable;

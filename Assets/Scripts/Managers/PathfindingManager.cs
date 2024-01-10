@@ -10,7 +10,8 @@ namespace Managers
 {
     public class PathfindingManager : MonoSingleton<PathfindingManager>
     {
-        [SerializeField] private PathfindingGrid grid;
+        private PathfindingGrid grid;
+        public PathfindingGrid Grid => grid;
         
         private const int MoveDiagonalCost = 14;
         private const int MoveStraightCost = 10;
@@ -28,7 +29,7 @@ namespace Managers
 
         private void LoadGrid() => grid = PathfindingGridHolder.Holder.GetComponent<PathfindingGrid>();
 
-        private void FindPath(Vector3 startPos, Vector3 targetPos)
+        public List<Vector3> FindPath(Vector3 startPos, Vector3 targetPos)
         {
             PathfindingNode startNode = grid.GetNode(startPos);
             PathfindingNode targetNode = grid.GetNode(targetPos);
@@ -53,12 +54,13 @@ namespace Managers
 
                 if (currentNode == targetNode)
                 {
-                    CalculatedPath(startNode, targetNode);
-                    return;
+                    return CalculatedPath(startNode, targetNode);
                 }
                 
                 CalculateMoveToNeighbourCosts(currentNode, targetNode);
             }
+
+            return null;
         }
 
         private void CalculateMoveToNeighbourCosts(PathfindingNode currentNode, PathfindingNode targetNode)
@@ -81,7 +83,7 @@ namespace Managers
             }
         }
         
-        private void CalculatedPath(PathfindingNode startNode, PathfindingNode endNode)
+        private List<Vector3> CalculatedPath(PathfindingNode startNode, PathfindingNode endNode)
         {
             List<PathfindingNode> path = new List<PathfindingNode>();
             PathfindingNode currentNode = endNode;
@@ -93,6 +95,16 @@ namespace Managers
             }
 
             path.Reverse();
+
+            List<Vector3> vectorPath = new List<Vector3>();
+            foreach (var node in path)
+            {
+                vectorPath.Add(node.WorldPosition);
+            }
+
+            
+            Debug.LogWarning($"Clicked node: {path.Last().ID}");
+            return vectorPath;
         }
 
         private int CalculateDistanceCost(PathfindingNode first, PathfindingNode second)

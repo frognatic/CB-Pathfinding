@@ -91,17 +91,10 @@ namespace Gameplay.MovingUnits
         private void AddHitPointAsFinalDestination(RaycastHit hit)
         {
             int hitLayer = hit.collider.gameObject.layer;
-            if (hitLayer == terrainLayerMask)
-            {
+            if (pathVectorList == null || hitLayer != terrainLayerMask) return;
+            int elementsCount = pathVectorList.Count;
+            pathVectorList[elementsCount - 1] = hit.point;
 
-                if (pathVectorList != null)
-                {
-                    var elementsCount = pathVectorList.Count;
-                    pathVectorList[elementsCount - 1] = hit.point;
-                    // pathVectorList?.Add(hit.point);
-                }
-            }
-                
         }
     }
 }

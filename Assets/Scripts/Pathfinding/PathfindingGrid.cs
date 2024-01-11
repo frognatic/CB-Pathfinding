@@ -13,8 +13,8 @@ namespace Pathfinding
 
         private float NodeDiameter => nodeRadius * 2;
         private Vector2Int gridSize;
-
-        private void Start()
+        
+        public void InitializeGrid()
         {
             int gridX = Mathf.RoundToInt(gridWorldSize.x / NodeDiameter);
             int gridY = Mathf.RoundToInt(gridWorldSize.y / NodeDiameter);

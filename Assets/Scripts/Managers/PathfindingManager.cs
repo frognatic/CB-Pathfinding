@@ -19,15 +19,19 @@ namespace Managers
         private List<PathfindingNode> openSet;
         private HashSet<PathfindingNode> closedSet;
         
-        public void AddToLoad() => InitManager.AddTaskToPhase(LoadPhase.Managers, Initialize().ToAsyncLazy());
+        public void AddToLoad() => InitManager.AddTaskToPhase(LoadPhase.Pathfinding, Initialize().ToAsyncLazy());
 
         private async UniTask Initialize()
         {
-            await InitManager.WaitUntilPhaseStarted(LoadPhase.Managers);
-            LoadGrid();
+            await InitManager.WaitUntilPhaseStarted(LoadPhase.Pathfinding);
+            InitGrid();
         }
 
-        private void LoadGrid() => grid = PathfindingGridHolder.Holder.GetComponent<PathfindingGrid>();
+        private void InitGrid()
+        {
+            grid = PathfindingGridHolder.Holder.GetComponent<PathfindingGrid>();
+            grid.InitializeGrid();
+        }
 
         public List<Vector3> FindPath(Vector3 startPos, Vector3 targetPos)
         {

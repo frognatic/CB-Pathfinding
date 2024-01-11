@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Initial;
 using Managers.Singleton;
@@ -8,6 +9,8 @@ namespace Managers
     public class SaveManager : MonoSingleton<SaveManager>
     {
         private const string SaveName = "GameSave";
+        private const int SaveWaitTime = 2000;
+        private bool isSaving;
 
         public SaveState SaveState;
         
@@ -16,10 +19,27 @@ namespace Managers
         private async UniTask Initialize()
         {
             await InitManager.WaitUntilPhaseStarted(LoadPhase.Save);
-            // If need load save
+            // if we want, we can load here all data, except creating new save state instance
+            SaveState = new();
+            //SaveSOManager.Instance.Load();
         }
         
-        public void Save()
+        public void TrySave()
+        {
+            if (isSaving)
+                return;
+
+            isSaving = true;
+            WaitForSave().Forget();
+        }
+
+        private async UniTask WaitForSave()
+        {
+            await Task.Delay(SaveWaitTime, destroyToken);
+            Save().Forget();
+        }
+
+        private UniTask Save()
         {
             PlayerPrefs.SetString(SaveName, JsonUtility.ToJson(SaveState));
             PlayerPrefs.Save();
@@ -27,6 +47,9 @@ namespace Managers
 #if UNITY_EDITOR
             SaveSOManager.Instance.Save(SaveState);
 #endif
+            isSaving = false;
+            
+            return UniTask.CompletedTask;
         }
         
         public void Load()

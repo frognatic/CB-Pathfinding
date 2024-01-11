@@ -5,7 +5,7 @@ namespace Gameplay.MovingUnits
     public class MovingUnits: IMovingUnitStats, IMovingUnits
     {
         private Vector3 defaultPosition = Vector3.zero;
-        private MovingUnitState.UnitData saveUnitData;
+        private MovingUnitsState.UnitData saveUnitData;
         
         public int Id { get; set; }
         public float Speed { get; set; }

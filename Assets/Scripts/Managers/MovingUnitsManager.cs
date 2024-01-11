@@ -3,12 +3,14 @@ using Cysharp.Threading.Tasks;
 using Gameplay.MovingUnits;
 using Initial;
 using Managers.Singleton;
+using UnityEngine;
 
 namespace Managers
 {
     public class MovingUnitsManager : MonoSingleton<MovingUnitsManager>
     {
         private const int UnitsToStartAmount = 3;
+        private MovingUnitsState movingUnitsState;
 
         public List<MovingUnits> MovingList { get; }
 
@@ -17,15 +19,22 @@ namespace Managers
         private async UniTask Initialize()
         {
             await InitManager.WaitUntilPhaseStarted(LoadPhase.Managers);
-            // spawn default players etc.
+            SaveManager.Instance.SaveState.movingUnitsState =
+                movingUnitsState = SaveManager.Instance.SaveState.movingUnitsState ?? new();
         }
 
-        private void CreateUnits() { }
-        
-        private void CreateSingleUnit() {}
+        private void CreateUnits()
+        {
+        }
 
-        public void LoadUnits() {}
+        private void CreateSingleUnit()
+        {
+        }
 
-        public void SetUnitAsLeader() {}
+        public void LoadUnits() => SaveManager.Instance.Load();
+
+        public void SetUnitAsLeader()
+        {
+        }
     }
 }

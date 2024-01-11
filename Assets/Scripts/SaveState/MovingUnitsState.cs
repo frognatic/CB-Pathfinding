@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class MovingUnitState
+public class MovingUnitsState
 {
     [Serializable]
     public class UnitData

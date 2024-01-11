@@ -20,7 +20,7 @@ namespace UI.Windows
             base.OnClose();
         }
 
-        public void Save() => SaveManager.Instance.Save();
+        public void Save() => SaveManager.Instance.TrySave();
 
         public void Load() => MovingUnitsManager.Instance.LoadUnits();
     }

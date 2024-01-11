@@ -101,13 +101,9 @@ namespace Managers
             path.Reverse();
 
             List<Vector3> vectorPath = new List<Vector3>();
-            foreach (var node in path)
-            {
+            foreach (var node in path) 
                 vectorPath.Add(node.WorldPosition);
-            }
 
-            
-            Debug.LogWarning($"Clicked node: {path.Last().ID}");
             return vectorPath;
         }
 

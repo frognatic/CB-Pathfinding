@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Managers;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -13,83 +12,96 @@ namespace Gameplay.MovingUnits
         private int currentPathIndex;
         private List<Vector3> pathVectorList;
 
-        public void Init(MovingUnits movingUnits)
+        private float unitHeight;
+        private LayerMask terrainLayerMask;
+        private Camera mainCamera;
+
+        private float GridRadius => PathfindingManager.Instance.Grid.NodeRadius;
+
+        public void Init(MovingUnits movingUnits) => this.movingUnits = movingUnits;
+
+        private void Awake()
         {
-            this.movingUnits = movingUnits;
+            unitHeight = transform.position.y;
+            terrainLayerMask = LayerMask.NameToLayer("Terrain");
+            mainCamera = Camera.main;
         }
 
         private void Update()
         {
-            if (PathfindingManager.Instance.Grid == null)
+            if (!CanUnitMove())
                 return;
-            
-            if (EventSystem.current.IsPointerOverGameObject())
-                return;
-            
-            //HandleMovement();
 
-            if (Input.GetMouseButtonDown(0))
-            {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-
-                if (Physics.Raycast(ray, out hit, 100))
-                {
-                    Debug.LogWarning($"{hit.point}");
-                    SetTargetPosition(hit.point);
-                    SetPosition();
-                }
-            }
+            HandleMovement();
+            HandleInput();
         }
+
+        private bool CanUnitMove() => PathfindingManager.Instance.Grid != null && 
+                                      !EventSystem.current.IsPointerOverGameObject();
 
         private void HandleMovement()
         {
-            if (pathVectorList != null)
+            if (pathVectorList == null) 
+                return;
+            
+            Vector3 targetPosition = pathVectorList[currentPathIndex];
+            targetPosition.y = unitHeight;
+            if (Vector3.Distance(transform.position, targetPosition) > GridRadius)
             {
-                Vector3 targetPosition = pathVectorList[currentPathIndex];
-                if (Vector3.Distance(transform.position, targetPosition) > 0.5f)
-                {
-                    Vector3 moveDir = (targetPosition - transform.position).normalized;
-
-                    transform.position += moveDir * 40 * Time.deltaTime;
-                }
-                else
-                {
-                    currentPathIndex++;
-                    if (currentPathIndex >= pathVectorList.Count)
-                    {
-                        StopMoving();
-                    }
-                }
+                Vector3 position = transform.position;
+                Vector3 moveDir = (targetPosition - position).normalized;
+                position += moveDir * 40 * Time.deltaTime;
+                transform.SetPositionAndRotation(position, Quaternion.identity);
+            }
+            else
+            {
+                currentPathIndex++;
+                if (currentPathIndex >= pathVectorList.Count) 
+                    StopMoving();
             }
         }
 
-        private void SetPosition()
+        private void HandleInput()
         {
-            transform.position = pathVectorList.Last();
-        }
+            if (!Input.GetMouseButtonDown(0)) 
+                return;
+            
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 
-        private void StopMoving()
-        {
-            pathVectorList = null;
+            if (!Physics.Raycast(ray, out var hit, 100)) 
+                return;
+                
+            SetTargetPosition(hit.point);
+            AddHitPointAsFinalDestination(hit);
         }
+        
+        private void StopMoving() => pathVectorList = null;
 
-        public Vector3 GetPosition()
-        {
-            return transform.position;
-        }
+        private Vector3 GetPosition() => transform.position;
 
-        public void SetTargetPosition(Vector3 targetPosition)
+        private void SetTargetPosition(Vector3 targetPosition)
         {
             currentPathIndex = 0;
             pathVectorList = PathfindingManager.Instance.FindPath(GetPosition(), targetPosition);
             
-            //Debug.LogWarning($"Last: {}");
-
-            if (pathVectorList != null && pathVectorList.Count > 1)
-            {
+            if (pathVectorList != null && pathVectorList.Count > 1) 
                 pathVectorList.RemoveAt(0);
+        }
+
+        private void AddHitPointAsFinalDestination(RaycastHit hit)
+        {
+            int hitLayer = hit.collider.gameObject.layer;
+            if (hitLayer == terrainLayerMask)
+            {
+
+                if (pathVectorList != null)
+                {
+                    var elementsCount = pathVectorList.Count;
+                    pathVectorList[elementsCount - 1] = hit.point;
+                    // pathVectorList?.Add(hit.point);
+                }
             }
+                
         }
     }
 }

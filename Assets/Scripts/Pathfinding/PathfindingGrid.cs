@@ -11,6 +11,8 @@ namespace Pathfinding
         [SerializeField] private float nodeRadius;
         [SerializeField] private PathfindingNode[,] grid;
 
+        public float NodeRadius => nodeRadius;
+        
         private float NodeDiameter => nodeRadius * 2;
         private Vector2Int gridSize;
         

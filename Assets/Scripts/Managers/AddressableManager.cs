@@ -1,7 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Initial;
 using Managers.Singleton;
-using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 namespace Managers
@@ -10,22 +9,22 @@ namespace Managers
     {
         private const string AddressableLabel = "MainAssets";
 
-        private SpritesSO sprites;
+        private UnitDetailsSO unitDetails;
 
         public void AddToLoad() => InitManager.AddTaskToPhase(LoadPhase.Addressable, Initialize().ToAsyncLazy());
 
         private async UniTask Initialize()
         {
             await InitManager.WaitUntilPhaseStarted(LoadPhase.Addressable);
-            await Addressables.LoadAssetsAsync<SpritesSO>(AddressableLabel, FillSpriteAsset).WithCancellation(destroyToken);
+            await Addressables.LoadAssetsAsync<UnitDetailsSO>(AddressableLabel, FillSpriteAsset).WithCancellation(destroyToken);
         }
 
-        private void FillSpriteAsset(SpritesSO asset)
+        private void FillSpriteAsset(UnitDetailsSO asset)
         {
             asset.Init();
-            sprites = asset;
+            unitDetails = asset;
         }
 
-        public Sprite GetSprite(string id) => sprites.GetSprite(id);
+        public UnitDetails GetUnitDetails(string id) => unitDetails.GetUnitDetails(id);
     }
 }

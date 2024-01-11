@@ -14,19 +14,20 @@ namespace UI.MovingUnits
 
         private const string UnitSprite = "unit_";
 
+        private UnitDetails unitDetails;
+
         public void Init(IMovingUnitStats movingUnitStats)
         {
             string spriteId = $"{UnitSprite}{movingUnitStats.Id}";
-            unitIcon.sprite = AddressableManager.Instance.GetSprite(spriteId);
+            unitDetails = AddressableManager.Instance.GetUnitDetails(spriteId);
+
+            unitIcon.color = unitDetails.color;
             unitIdText.text = movingUnitStats.Id.ToString();
 
             MarkAsDeselected();
         }
         
-        public void SetAsLeader()
-        {
-            MarkAsSelected();
-        }
+        public void SetAsLeader() => MarkAsSelected();
 
         private void MarkAsSelected() => selectedImage.gameObject.SetActive(true);
         private void MarkAsDeselected() => selectedImage.gameObject.SetActive(false);

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Managers;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -19,14 +20,25 @@ namespace Gameplay.MovingUnits
 
         private void Update()
         {
+            if (PathfindingManager.Instance.Grid == null)
+                return;
+            
             if (EventSystem.current.IsPointerOverGameObject())
                 return;
-
-            HandleMovement();
+            
+            //HandleMovement();
 
             if (Input.GetMouseButtonDown(0))
             {
-                SetTargetPosition(GetMouseWorldPosition());
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+
+                if (Physics.Raycast(ray, out hit, 100))
+                {
+                    Debug.LogWarning($"{hit.point}");
+                    SetTargetPosition(hit.point);
+                    SetPosition();
+                }
             }
         }
 
@@ -35,7 +47,7 @@ namespace Gameplay.MovingUnits
             if (pathVectorList != null)
             {
                 Vector3 targetPosition = pathVectorList[currentPathIndex];
-                if (Vector3.Distance(transform.position, targetPosition) > 1f)
+                if (Vector3.Distance(transform.position, targetPosition) > 0.5f)
                 {
                     Vector3 moveDir = (targetPosition - transform.position).normalized;
 
@@ -50,6 +62,11 @@ namespace Gameplay.MovingUnits
                     }
                 }
             }
+        }
+
+        private void SetPosition()
+        {
+            transform.position = pathVectorList.Last();
         }
 
         private void StopMoving()
@@ -73,19 +90,6 @@ namespace Gameplay.MovingUnits
             {
                 pathVectorList.RemoveAt(0);
             }
-        }
-
-        public Vector3 GetMouseWorldPosition()
-        {
-            Vector3 vec = GetMouseWorldPositionWithZ(Input.mousePosition, Camera.main);
-            //vec.z = 0f;
-            return vec;
-        }
-
-        public Vector3 GetMouseWorldPositionWithZ(Vector3 screenPosition, Camera worldCamera)
-        {
-            Vector3 worldPosition = worldCamera.ScreenToWorldPoint(screenPosition);
-            return worldPosition;
         }
     }
 }

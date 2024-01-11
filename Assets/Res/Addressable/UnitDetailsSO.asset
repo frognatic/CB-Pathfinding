@@ -49,7 +49,7 @@ MonoBehaviour:
     element:
       color: {r: 0, g: 1, b: 0.8865156, a: 1}
       spawnPosition: {x: 18, y: 0, z: -14}
-  - id: unit_8
+  - id: unit_9
     element:
       color: {r: 0.014818435, g: 0.3490566, b: 0.05370248, a: 1}
       spawnPosition: {x: 10, y: 0, z: 27.5}

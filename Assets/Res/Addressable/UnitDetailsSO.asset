@@ -15,41 +15,51 @@ MonoBehaviour:
   assetContainers:
   - id: unit_0
     element:
+      id: 0
       color: {r: 0.24533153, g: 1, b: 0, a: 1}
       spawnPosition: {x: 0, y: 0.5, z: 0}
   - id: unit_1
     element:
+      id: 1
       color: {r: 0.9018402, g: 0.9622642, b: 0.20425421, a: 1}
       spawnPosition: {x: -14, y: 0.5, z: 17}
   - id: unit_2
     element:
+      id: 2
       color: {r: 0.7924528, g: 0.13082945, b: 0.45209515, a: 1}
       spawnPosition: {x: -23, y: 0.5, z: 5}
   - id: unit_3
     element:
+      id: 3
       color: {r: 0.95486355, g: 0, b: 1, a: 1}
       spawnPosition: {x: -19, y: 0.5, z: -4.5}
   - id: unit_4
     element:
+      id: 4
       color: {r: 0.5347996, g: 0, b: 1, a: 1}
       spawnPosition: {x: -16, y: 0.5, z: -18}
   - id: unit_5
     element:
+      id: 5
       color: {r: 0.12682125, g: 0, b: 0.6320754, a: 1}
       spawnPosition: {x: -2, y: 0.5, z: -16}
   - id: unit_6
     element:
+      id: 6
       color: {r: 0.50595564, g: 0.495283, b: 1, a: 1}
       spawnPosition: {x: 13, y: 0.5, z: 6}
   - id: unit_7
     element:
+      id: 7
       color: {r: 0.514151, g: 0.8143943, b: 1, a: 1}
       spawnPosition: {x: 23.5, y: 0.5, z: -2.2}
   - id: unit_8
     element:
+      id: 8
       color: {r: 0, g: 1, b: 0.8865156, a: 1}
       spawnPosition: {x: 18, y: 0.5, z: -14}
   - id: unit_9
     element:
+      id: 9
       color: {r: 0.014818435, g: 0.3490566, b: 0.05370248, a: 1}
       spawnPosition: {x: 10, y: 0.5, z: 27.5}

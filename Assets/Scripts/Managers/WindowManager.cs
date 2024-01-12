@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Initial;
 using Managers.Singleton;
 using UI.Windows.Base;
 using UnityEngine;
@@ -11,13 +10,9 @@ namespace Managers
     {
         [SerializeField] private List<Window> windowList = new();
         
-        public void AddToLoad() => InitManager.AddTaskToPhase(LoadPhase.Windows, Initialize().ToAsyncLazy());
-        
-        private async UniTask Initialize()
+        public async UniTask Initialize()
         {
-            await InitManager.WaitUntilPhaseStarted(LoadPhase.Windows);
             await UniTask.WaitUntil(() => windowList.Count > 0, cancellationToken: Instance.destroyCancellationToken).ToAsyncLazy();
-            
             OpenWindow(WindowType.MainWindow);
         }
 

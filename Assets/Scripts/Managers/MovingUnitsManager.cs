@@ -17,14 +17,13 @@ namespace Managers
         private const string UnitDetailsPrefix = "unit_";
 
         public List<MovingUnit> MovingList { get; } = new();
-        public void AddToLoad() => InitManager.AddTaskToPhase(LoadPhase.Managers, Initialize().ToAsyncLazy());
 
-        private async UniTask Initialize()
+        public UniTask Initialize()
         {
-            await InitManager.WaitUntilPhaseStarted(LoadPhase.Managers);
             SaveManager.Instance.SaveState.movingUnitsState ??= new();
-
             SetUnits();
+            
+            return UniTask.CompletedTask;
         }
 
         private void SetUnits(bool loadUnits = false)

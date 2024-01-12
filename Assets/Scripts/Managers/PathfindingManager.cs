@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
-using Initial;
 using Managers.Singleton;
 using Pathfinding;
 using UnityEngine;
@@ -19,12 +18,10 @@ namespace Managers
         private List<PathfindingNode> openSet;
         private HashSet<PathfindingNode> closedSet;
         
-        public void AddToLoad() => InitManager.AddTaskToPhase(LoadPhase.Pathfinding, Initialize().ToAsyncLazy());
-
-        private async UniTask Initialize()
+        public UniTask Initialize()
         {
-            await InitManager.WaitUntilPhaseStarted(LoadPhase.Pathfinding);
             InitGrid();
+            return UniTask.CompletedTask;
         }
 
         private void InitGrid()

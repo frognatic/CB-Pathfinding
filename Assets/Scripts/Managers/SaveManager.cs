@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using Initial;
 using Managers.Singleton;
 using UnityEngine;
 
@@ -14,14 +13,11 @@ namespace Managers
 
         public SaveState SaveState;
         
-        public void AddToLoad() => InitManager.AddTaskToPhase(LoadPhase.Save, Initialize().ToAsyncLazy());
-
-        private async UniTask Initialize()
+        public UniTask Initialize()
         {
-            await InitManager.WaitUntilPhaseStarted(LoadPhase.Save);
             // if we want, we can load here all data, except creating new save state instance
             SaveState = new();
-            //SaveSOManager.Instance.Load();
+            return UniTask.CompletedTask;
         }
         
         public void TrySave()

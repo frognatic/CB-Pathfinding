@@ -1,40 +1,36 @@
-using System.Collections;
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Initial;
-using Managers;
 using Managers.Singleton;
 using UnityEditor;
 using UnityEngine;
 
-public class SaveSOManager : MonoSingleton<SaveSOManager>
+namespace Managers
 {
-    private SaveSO scriptable;
-    public SaveSO Scriptable => scriptable; 
-    
-    public void AddToLoad() => InitManager.AddTaskToPhase(LoadPhase.Save, Initialize().ToAsyncLazy());
-
-    private async UniTask Initialize()
+    public class SaveSOManager : MonoSingleton<SaveSOManager>
     {
-        await InitManager.WaitUntilPhaseStarted(LoadPhase.Save);
-        Load();
-    }
+        private SaveSO scriptable;
 
-    public void Load()
-    {
-        scriptable = AssetDatabase.LoadAssetAtPath<SaveSO>(SaveSO.Path);
-        if (!scriptable)
+        public UniTask Initialize()
         {
-            scriptable = ScriptableObject.CreateInstance<SaveSO>();
-            AssetDatabase.CreateAsset(scriptable, SaveSO.Path);
-            AssetDatabase.SaveAssets();
+            Load();
+            return UniTask.CompletedTask;
         }
-    }
+
+        public void Load()
+        {
+            scriptable = AssetDatabase.LoadAssetAtPath<SaveSO>(SaveSO.Path);
+            if (!scriptable)
+            {
+                scriptable = ScriptableObject.CreateInstance<SaveSO>();
+                AssetDatabase.CreateAsset(scriptable, SaveSO.Path);
+                AssetDatabase.SaveAssets();
+            }
+        }
     
-    public void Save(SaveState state)
-    {
-        scriptable.save = JsonUtility.FromJson<SaveState>(JsonUtility.ToJson(state));
-        EditorUtility.SetDirty(scriptable);
-        AssetDatabase.SaveAssetIfDirty(scriptable);
+        public void Save(SaveState state)
+        {
+            scriptable.save = JsonUtility.FromJson<SaveState>(JsonUtility.ToJson(state));
+            EditorUtility.SetDirty(scriptable);
+            AssetDatabase.SaveAssetIfDirty(scriptable);
+        }
     }
 }

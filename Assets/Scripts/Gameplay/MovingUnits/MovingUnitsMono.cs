@@ -17,7 +17,6 @@ namespace Gameplay.MovingUnits
 
         private float unitHeight;
         private LayerMask terrainLayerMask;
-        private Camera mainCamera;
 
         private float GridRadius => PathfindingManager.Instance.Grid.NodeRadius;
 
@@ -45,7 +44,6 @@ namespace Gameplay.MovingUnits
         {
             unitHeight = transform.position.y;
             terrainLayerMask = LayerMask.NameToLayer("Terrain");
-            mainCamera = Camera.main;
         }
 
         private void Update()
@@ -54,11 +52,9 @@ namespace Gameplay.MovingUnits
                 return;
 
             HandleMovement();
-            HandleInput();
         }
 
-        private bool CanUnitMove() => PathfindingManager.Instance.Grid != null && 
-                                      !EventSystem.current.IsPointerOverGameObject();
+        private bool CanUnitMove() => PathfindingManager.Instance.Grid != null;
 
         private void HandleMovement()
         {
@@ -82,25 +78,17 @@ namespace Gameplay.MovingUnits
                     StopMoving();
             }
         }
-
-        private void HandleInput()
-        {
-            if (!Input.GetMouseButtonDown(0)) 
-                return;
-            
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-
-            if (!Physics.Raycast(ray, out var hit, 100)) 
-                return;
-                
-            SetTargetPosition(hit.point);
-            AddHitPointAsFinalDestination(hit);
-        }
         
         private void StopMoving() => pathVectorList = null;
 
         private Vector3 GetPosition() => transform.position;
 
+        public void UpdatePath(RaycastHit hit)
+        {
+            SetTargetPosition(hit.point);
+            AddHitPointAsFinalDestination(hit);
+        }
+        
         private void SetTargetPosition(Vector3 targetPosition)
         {
             currentPathIndex = 0;

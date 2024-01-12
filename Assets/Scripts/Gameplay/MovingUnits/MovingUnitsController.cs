@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using Managers;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Utility;
 
 namespace Gameplay.MovingUnits
@@ -11,6 +13,10 @@ namespace Gameplay.MovingUnits
         [SerializeField] private Transform movingUnitsContent;
 
         private readonly List<MovingUnitsMono> movingUnitsMonoList = new();
+        
+        private Camera mainCamera;
+
+        private void Awake() => mainCamera = Camera.main;
 
         private void OnEnable()
         {
@@ -22,6 +28,27 @@ namespace Gameplay.MovingUnits
         {
             MovingUnitsManager.OnChangeLeader -= OnChangeLeaderResponse;
             MovingUnitsManager.OnCreateUnits -= SpawnUnitsMono;
+        }
+
+        private void Update()
+        {
+            if (EventSystem.current.IsPointerOverGameObject())
+                return;
+            
+            HandleInput();
+        }
+        
+        private void HandleInput()
+        {
+            if (!Input.GetMouseButtonDown(0)) 
+                return;
+            
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            if (!Physics.Raycast(ray, out var hit, 100)) 
+                return;
+
+            foreach (MovingUnitsMono mono in movingUnitsMonoList) 
+                mono.UpdatePath(hit);
         }
 
         private void SpawnUnitsMono()

@@ -16,19 +16,13 @@ namespace Gameplay.MovingUnits
         private void OnEnable()
         {
             MovingUnitsManager.OnChangeLeader += OnChangeLeaderResponse;
+            MovingUnitsManager.OnCreateUnits += SpawnUnitsMono;
         }
 
         private void OnDisable()
         {
-            MovingUnitsManager.OnChangeLeader += OnChangeLeaderResponse;
-        }
-
-        private IEnumerator Start()
-        {
-            WaitUntil waitUntil = new WaitUntil(() => MovingUnitsManager.Instance.IsReady);
-            yield return waitUntil;
-
-            SpawnUnitsMono();
+            MovingUnitsManager.OnChangeLeader -= OnChangeLeaderResponse;
+            MovingUnitsManager.OnCreateUnits -= SpawnUnitsMono;
         }
 
         private void SpawnUnitsMono()

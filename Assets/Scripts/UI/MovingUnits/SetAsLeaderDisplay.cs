@@ -33,12 +33,14 @@ namespace UI.MovingUnits
         
         public void SetAsLeader()
         {
-            if (movingUnit.IsLeader)
+            if (IsUnitLeader(movingUnit))
                 return;
             
             MovingUnitsManager.Instance.SetUnitAsLeader(movingUnit);
             MarkAsSelected();
         }
+
+        private bool IsUnitLeader(IMovingUnits movingUnits) => movingUnits.IsLeader;
 
         private void MarkAsSelected()
         {

@@ -48,6 +48,10 @@ namespace UI.Windows
 
         public void Save() => SaveManager.Instance.TrySave();
 
-        public void Load() => MovingUnitsManager.Instance.LoadUnits();
+        public void Load()
+        {
+            MovingUnitsManager.Instance.LoadMovingUnits();
+            InitLeaderDisplays();
+        }
     }
 }

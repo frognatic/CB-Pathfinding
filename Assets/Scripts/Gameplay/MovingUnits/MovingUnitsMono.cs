@@ -73,6 +73,7 @@ namespace Gameplay.MovingUnits
                 Vector3 moveDir = (targetPosition - position).normalized;
                 position += moveDir * movingUnit.Speed * Time.deltaTime;
                 transform.SetPositionAndRotation(position, Quaternion.identity);
+                movingUnit.SavePosition(position);
             }
             else
             {

@@ -20,14 +20,10 @@ namespace Gameplay.MovingUnits
             this.unitDetails = unitDetails;
         }
 
-        public void MarkAsLeader()
-        {
-            IsLeader = true;
-        }
+        public void MarkAsLeader() => IsLeader = true;
 
-        public void Unmark()
-        {
-            IsLeader = false;
-        }
+        public void Unmark() => IsLeader = false;
+
+        public void SavePosition(Vector3 position) => saveUnitData.position = position;
     }
 }

@@ -9,7 +9,7 @@ namespace Managers
     public class SaveManager : MonoSingleton<SaveManager>
     {
         private const string SaveName = "GameSave";
-        private const int SaveWaitTime = 2000;
+        private const int SaveWaitTime = 1000;
         private bool isSaving;
 
         public SaveState SaveState;
@@ -49,6 +49,8 @@ namespace Managers
 #endif
             isSaving = false;
             
+            Debug.Log($"{Tag} Save done.");
+            
             return UniTask.CompletedTask;
         }
         
@@ -64,6 +66,9 @@ namespace Managers
                 SaveState = new SaveState();
 
             SaveSOManager.Instance.Load();
+            Debug.Log($"{Tag} Finished loading.");
         }
+        
+        private string Tag => "[SaveManager] ";
     }
 }

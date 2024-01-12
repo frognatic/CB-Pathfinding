@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Initial;
 using Managers.Singleton;
@@ -16,15 +17,16 @@ namespace Managers
         private async UniTask Initialize()
         {
             await InitManager.WaitUntilPhaseStarted(LoadPhase.Addressable);
-            await Addressables.LoadAssetsAsync<UnitDetailsSO>(AddressableLabel, FillSpriteAsset).WithCancellation(destroyToken);
+            await Addressables.LoadAssetsAsync<UnitDetailsSO>(AddressableLabel, FillUnitDetailsAsset).WithCancellation(destroyToken);
         }
 
-        private void FillSpriteAsset(UnitDetailsSO asset)
+        private void FillUnitDetailsAsset(UnitDetailsSO asset)
         {
             asset.Init();
             unitDetails = asset;
         }
 
         public UnitDetails GetUnitDetails(string id) => unitDetails.GetUnitDetails(id);
+        public List<UnitDetails> GetUnitDetailsList() => unitDetails.GetUnitDetailsList();
     }
 }

@@ -7,7 +7,9 @@ namespace Gameplay.MovingUnits
 {
     public class MovingUnitsMono : MonoBehaviour
     {
-        private MovingUnits movingUnits;
+        [SerializeField] private MeshRenderer meshRenderer;
+        
+        private MovingUnit movingUnit;
 
         private int currentPathIndex;
         private List<Vector3> pathVectorList;
@@ -18,7 +20,26 @@ namespace Gameplay.MovingUnits
 
         private float GridRadius => PathfindingManager.Instance.Grid.NodeRadius;
 
-        public void Init(MovingUnits movingUnits) => this.movingUnits = movingUnits;
+        public void Init(MovingUnit movingUnit)
+        {
+            this.movingUnit = movingUnit;
+            IMovingUnitStats movingStats = movingUnit;
+            
+            SetPosition();
+            SetUnitColor();
+        }
+        
+        private void SetPosition() => transform.position = movingUnit.Position;
+
+        private void SetUnitColor()
+        {
+            UnitDetails unitDetails = AddressableManager.Instance.GetUnitDetails($"unit_{movingUnit.Id}");
+            
+            MaterialPropertyBlock materialPropertyBlock = new();
+            materialPropertyBlock.SetColor("_Color", unitDetails.color);
+            
+            meshRenderer.SetPropertyBlock(materialPropertyBlock);
+        }
 
         private void Awake()
         {
@@ -50,7 +71,7 @@ namespace Gameplay.MovingUnits
             {
                 Vector3 position = transform.position;
                 Vector3 moveDir = (targetPosition - position).normalized;
-                position += moveDir * 40 * Time.deltaTime;
+                position += moveDir * movingUnit.Speed * Time.deltaTime;
                 transform.SetPositionAndRotation(position, Quaternion.identity);
             }
             else
@@ -94,7 +115,6 @@ namespace Gameplay.MovingUnits
             if (pathVectorList == null || hitLayer != terrainLayerMask) return;
             int elementsCount = pathVectorList.Count;
             pathVectorList[elementsCount - 1] = hit.point;
-
         }
     }
 }

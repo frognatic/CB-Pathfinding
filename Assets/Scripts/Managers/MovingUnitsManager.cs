@@ -1,16 +1,19 @@
+using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Gameplay.MovingUnits;
 using Initial;
 using Managers.Singleton;
-using UnityEngine;
 using Utility;
+using Random = UnityEngine.Random;
 
 namespace Managers
 {
     public class MovingUnitsManager : MonoSingleton<MovingUnitsManager>
     {
         public bool IsReady { get; private set; }
+        
+        public static event Action<IMovingUnits> OnChangeLeader;
         
         private const int UnitsToStartAmount = 3;
         private MovingUnitsState movingUnitsState;
@@ -39,26 +42,37 @@ namespace Managers
             
             for (int i = 0; i < UnitsToStartAmount; i++)
             {
-                
-                float randomSpeed = Random.Range(20f, 30f);
-                MovingUnitsState.UnitData unitData = new(randedUnitDetails[i].id, randomSpeed, randedUnitDetails[i].spawnPosition);
-                MovingUnit movingUnit = new(unitData, randedUnitDetails[i]);
-                
-                MovingList.Add(movingUnit);
-                unitDataList.Add(unitData);
+                unitDataList.Add(CreateSingleUnit(randedUnitDetails[i]));
             }
 
             SaveManager.Instance.SaveState.movingUnitsState.movingUnitsData = unitDataList;
         }
-
-        private void CreateSingleUnit()
+        
+        private MovingUnitsState.UnitData CreateSingleUnit(UnitDetails unitDetails)
         {
+            float randomSpeed = GetRandomSpeed();
+            MovingUnitsState.UnitData unitData = new(unitDetails.id, randomSpeed, unitDetails.spawnPosition);
+            MovingUnit movingUnit = new(unitData, unitDetails);
+                
+            MovingList.Add(movingUnit);
+            return unitData;
         }
-
+        
+        private float GetRandomSpeed() => Random.Range(20f, 30f);
+        
         public void LoadUnits() => SaveManager.Instance.Load();
 
-        public void SetUnitAsLeader()
+        public void SetUnitAsLeader(IMovingUnits movingUnits)
         {
+            MarkAsDeselected();
+            movingUnits.MarkAsLeader();
+            
+            OnChangeLeader?.Invoke(movingUnits);
+        }
+
+        private void MarkAsDeselected()
+        {
+            MovingList.ForEach(x => x.Unmark());
         }
     }
 }

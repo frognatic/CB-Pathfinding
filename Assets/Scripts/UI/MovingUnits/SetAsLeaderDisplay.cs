@@ -1,5 +1,7 @@
 using Gameplay.MovingUnits;
+using Managers;
 using TMPro;
+using UI.Windows;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,20 +12,40 @@ namespace UI.MovingUnits
         [SerializeField] private Image unitIcon;
         [SerializeField] private Image selectedImage;
         [SerializeField] private TextMeshProUGUI unitIdText;
-        
-        private UnitDetails unitDetails;
 
-        public void Init(IMovingUnitStats movingUnitStats)
+        private MainWindow mainWindow;
+        private MovingUnit movingUnit;
+
+        public void Init(MainWindow mainWindow, MovingUnit movingUnit)
+        {
+            this.mainWindow = mainWindow;
+            this.movingUnit = movingUnit;
+
+            SetUnitInfo(movingUnit);
+            MarkAsDeselected();
+        }
+
+        private void SetUnitInfo(IMovingUnitStats movingUnitStats)
         {
             unitIcon.color = movingUnitStats.Color;
             unitIdText.text = movingUnitStats.Id.ToString();
-
-            MarkAsDeselected();
         }
         
-        public void SetAsLeader() => MarkAsSelected();
+        public void SetAsLeader()
+        {
+            if (movingUnit.IsLeader)
+                return;
+            
+            MovingUnitsManager.Instance.SetUnitAsLeader(movingUnit);
+            MarkAsSelected();
+        }
 
-        private void MarkAsSelected() => selectedImage.gameObject.SetActive(true);
-        private void MarkAsDeselected() => selectedImage.gameObject.SetActive(false);
+        private void MarkAsSelected()
+        {
+            mainWindow.DeselectAll();
+            selectedImage.gameObject.SetActive(true);
+        }
+
+        public void MarkAsDeselected() => selectedImage.gameObject.SetActive(false);
     }
 }

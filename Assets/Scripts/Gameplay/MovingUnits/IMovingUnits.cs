@@ -4,5 +4,6 @@ namespace Gameplay.MovingUnits
     {
         public void MarkAsLeader();
         public void Unmark();
+        public bool IsLeader { get; set; }
     }
 }

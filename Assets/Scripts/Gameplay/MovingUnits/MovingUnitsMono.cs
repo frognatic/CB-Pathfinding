@@ -8,6 +8,7 @@ namespace Gameplay.MovingUnits
     public class MovingUnitsMono : MonoBehaviour
     {
         [SerializeField] private MeshRenderer meshRenderer;
+        [SerializeField] private GameObject leaderCrown;
         
         private MovingUnit movingUnit;
 
@@ -23,7 +24,6 @@ namespace Gameplay.MovingUnits
         public void Init(MovingUnit movingUnit)
         {
             this.movingUnit = movingUnit;
-            IMovingUnitStats movingStats = movingUnit;
             
             SetPosition();
             SetUnitColor();
@@ -116,5 +116,7 @@ namespace Gameplay.MovingUnits
             int elementsCount = pathVectorList.Count;
             pathVectorList[elementsCount - 1] = hit.point;
         }
+
+        public void MarkAsLeader(IMovingUnits movingUnits) => leaderCrown.SetActive(movingUnit == movingUnits);
     }
 }

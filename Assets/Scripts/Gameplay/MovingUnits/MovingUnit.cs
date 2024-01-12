@@ -11,14 +11,23 @@ namespace Gameplay.MovingUnits
         public float Speed => saveUnitData.speed;
         public Vector3 Position => saveUnitData.position;
         public Color Color => unitDetails.color;
+        
+        public bool IsLeader { get; set; }
 
         public MovingUnit(MovingUnitsState.UnitData saveUnitData, UnitDetails unitDetails)
         {
             this.saveUnitData = saveUnitData;
             this.unitDetails = unitDetails;
         }
-        
-        public void MarkAsLeader() {}
-        public void Unmark() {}
+
+        public void MarkAsLeader()
+        {
+            IsLeader = true;
+        }
+
+        public void Unmark()
+        {
+            IsLeader = false;
+        }
     }
 }

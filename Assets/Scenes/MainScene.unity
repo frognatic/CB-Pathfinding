@@ -1395,6 +1395,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1704472475}
     m_Modifications:
+    - target: {fileID: 1192215047729155377, guid: 9fdf6deb6cec0404abbec816681955b3, type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
+      objectReference: {fileID: 0}
     - target: {fileID: 4136272577975599651, guid: 9fdf6deb6cec0404abbec816681955b3, type: 3}
       propertyPath: m_Name
       value: MainWindow

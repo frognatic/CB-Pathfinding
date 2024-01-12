@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using Managers;
 using UnityEngine;
@@ -11,7 +10,7 @@ namespace Gameplay.MovingUnits
         [SerializeField] private MovingUnitsMono movingUnitsPrefab;
         [SerializeField] private Transform movingUnitsContent;
 
-        private List<MovingUnitsMono> movingUnitsMonoList = new();
+        private readonly List<MovingUnitsMono> movingUnitsMonoList = new();
 
         private void OnEnable()
         {

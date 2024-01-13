@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Gameplay.MovingUnits;
-using Initial;
 using Managers.Singleton;
 using Utility;
 

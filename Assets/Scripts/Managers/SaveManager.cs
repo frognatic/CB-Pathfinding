@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Managers.Singleton;
+using NaughtyAttributes;
 using UnityEngine;
 
 namespace Managers
@@ -18,7 +19,7 @@ namespace Managers
         private bool isSaving;
         private bool isLoading;
 
-        public SaveState SaveState;
+        [ReadOnly] public SaveState SaveState;
 
         public UniTask Initialize()
         {
@@ -62,7 +63,7 @@ namespace Managers
         }
 
         private async UniTask SaveToFile(string jsonText) =>
-            await File.WriteAllTextAsync(Application.dataPath + "/Save.txt", jsonText);
+            await File.WriteAllTextAsync(Application.dataPath + SaveFileName, jsonText);
 
         public void Load()
         {
@@ -96,7 +97,7 @@ namespace Managers
         }
 
         private bool HasSave(bool isFromFile) =>
-            isFromFile ? File.Exists(Application.dataPath + "/Save.txt") : PlayerPrefs.HasKey(SaveName);
+            isFromFile ? File.Exists(Application.dataPath + SaveFileName) : PlayerPrefs.HasKey(SaveName);
 
         private void LoadFromPrefs()
         {
@@ -107,7 +108,7 @@ namespace Managers
 
         private void LoadFromFile()
         {
-            string json = File.ReadAllText(Application.dataPath + "/Save.txt");
+            string json = File.ReadAllText(Application.dataPath + SaveFileName);
             SaveState result = !string.IsNullOrEmpty(json) ? JsonUtility.FromJson<SaveState>(json) : null;
             SaveState = result;
         }

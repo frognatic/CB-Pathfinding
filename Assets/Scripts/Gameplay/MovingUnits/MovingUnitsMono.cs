@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Managers;
 using Pathfinding;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace Gameplay.MovingUnits
 {
@@ -18,6 +17,7 @@ namespace Gameplay.MovingUnits
 
         private float unitHeight;
         private LayerMask terrainLayerMask;
+        private LayerMask unitLayerMask;
         
         private Vector3 targetPosition;
 
@@ -47,6 +47,7 @@ namespace Gameplay.MovingUnits
         {
             unitHeight = transform.position.y;
             terrainLayerMask = LayerMask.NameToLayer("Terrain");
+            unitLayerMask = LayerMask.NameToLayer("Units");
         }
 
         private void Update()
@@ -61,7 +62,7 @@ namespace Gameplay.MovingUnits
 
         private void HandleMovement()
         {
-            if (pathVectorList == null) 
+            if (IsPathVectorEmpty()) 
                 return;
 
             SetTargetPosition();
@@ -109,28 +110,33 @@ namespace Gameplay.MovingUnits
         public void SetPathToDestination(Vector3 pos)
         {
             SetTargetPosition(pos);
+            if (IsPathVectorEmpty()) 
+                return;
+            
             int elementsCount = pathVectorList.Count;
             pathVectorList[elementsCount - 1] = pos;
         }
 
         public PathfindingNode GetNode(Vector3 targetPos) => PathfindingManager.Instance.GetNode(targetPos);
 
-        private void SetTargetPosition(Vector3 targetPosition)
+        private void SetTargetPosition(Vector3 pos)
         {
             currentPathIndex = 0;
-            pathVectorList = PathfindingManager.Instance.FindPath(GetPosition(), targetPosition);
-            
-            if (pathVectorList != null && pathVectorList.Count > 1) 
-                pathVectorList.RemoveAt(0);
+            pathVectorList = PathfindingManager.Instance.FindPath(GetPosition(), pos);
+
+            if (IsPathVectorEmpty()) return;
+            pathVectorList.RemoveAt(0);
         }
 
         private void AddHitPointAsFinalDestination(RaycastHit hit)
         {
             int hitLayer = hit.collider.gameObject.layer;
-            if (pathVectorList == null || hitLayer != terrainLayerMask) return;
+            if (IsPathVectorEmpty() || hitLayer != terrainLayerMask) return;
             int elementsCount = pathVectorList.Count;
             pathVectorList[elementsCount - 1] = hit.point;
         }
+
+        private bool IsPathVectorEmpty() => pathVectorList == null || pathVectorList.Count <= 0;
 
         public void MarkAsLeader(IMovingUnits movingUnits) => leaderCrown.SetActive(movingUnit == movingUnits);
         public bool IsLeader => movingUnit.IsLeader;

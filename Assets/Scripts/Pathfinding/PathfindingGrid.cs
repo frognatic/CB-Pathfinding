@@ -73,8 +73,8 @@ namespace Pathfinding
 
         public PathfindingNode GetNode(Vector3 worldPosition)
         {
-            float percentX = (worldPosition.x + gridWorldSize.x / 2) / gridWorldSize.x;
-            float percentY = (worldPosition.z + gridWorldSize.y / 2) / gridWorldSize.y;
+            float percentX = (worldPosition.x + gridWorldSize.x * 0.5f) / gridWorldSize.x;
+            float percentY = (worldPosition.z + gridWorldSize.y * 0.5f) / gridWorldSize.y;
 
             int x = Mathf.FloorToInt(Mathf.Clamp(gridSize.x * percentX, 0, gridSize.x - 1));
             int y = Mathf.RoundToInt(Mathf.Clamp(gridSize.y * percentY + 1, 0, gridSize.y - 1));
@@ -101,7 +101,8 @@ namespace Pathfinding
 
         private void DrawNodeGizmos()
         {
-            if (grid == null) return;
+            if (grid == null) 
+                return;
 
             foreach (PathfindingNode node in grid)
             {

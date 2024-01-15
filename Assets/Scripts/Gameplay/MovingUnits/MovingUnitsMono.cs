@@ -18,6 +18,8 @@ namespace Gameplay.MovingUnits
 
         private float unitHeight;
         private LayerMask terrainLayerMask;
+        
+        private Vector3 targetPosition;
 
         private float GridRadius => PathfindingManager.Instance.Grid.NodeRadius;
 
@@ -61,23 +63,37 @@ namespace Gameplay.MovingUnits
         {
             if (pathVectorList == null) 
                 return;
+
+            SetTargetPosition();
             
-            Vector3 targetPosition = pathVectorList[currentPathIndex];
-            targetPosition.y = unitHeight;
-            if (Vector3.Distance(transform.position, targetPosition) > GridRadius)
-            {
-                Vector3 position = transform.position;
-                Vector3 moveDir = (targetPosition - position).normalized;
-                position += moveDir * movingUnit.Speed * Time.deltaTime;
-                transform.SetPositionAndRotation(position, Quaternion.identity);
-                movingUnit.SavePosition(position);
-            }
+            if (CanMove())
+                Move();
             else
-            {
-                currentPathIndex++;
-                if (currentPathIndex >= pathVectorList.Count) 
-                    StopMoving();
-            }
+                TryNextStep();
+        }
+
+        private void SetTargetPosition()
+        {
+            targetPosition = pathVectorList[currentPathIndex];
+            targetPosition.y = unitHeight;
+        }
+
+        private bool CanMove() => Vector3.Distance(transform.position, targetPosition) > GridRadius;
+
+        private void Move()
+        {
+            Vector3 position = transform.position;
+            Vector3 moveDir = (targetPosition - position).normalized;
+            position += moveDir * movingUnit.Speed * Time.deltaTime;
+            transform.SetPositionAndRotation(position, Quaternion.identity);
+            movingUnit.SavePosition(position);
+        }
+
+        private void TryNextStep()
+        {
+            currentPathIndex++;
+            if (currentPathIndex >= pathVectorList.Count) 
+                StopMoving();
         }
         
         private void StopMoving() => pathVectorList = null;
@@ -97,11 +113,8 @@ namespace Gameplay.MovingUnits
             pathVectorList[elementsCount - 1] = pos;
         }
 
-        public PathfindingNode GetNode(Vector3 targetPos)
-        {
-            return PathfindingManager.Instance.GetNode(targetPos);
-        }
-        
+        public PathfindingNode GetNode(Vector3 targetPos) => PathfindingManager.Instance.GetNode(targetPos);
+
         private void SetTargetPosition(Vector3 targetPosition)
         {
             currentPathIndex = 0;

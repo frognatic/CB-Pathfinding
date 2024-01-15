@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Managers.Singleton;
@@ -7,9 +8,12 @@ namespace Managers
 {
     public class SaveManager : MonoSingleton<SaveManager>
     {
+        public static event Action<bool> SavingAction;
+        
         private const string SaveName = "GameSave";
-        private const int SaveWaitTime = 1000;
+        private const int SaveWaitTime = 2000;
         private bool isSaving;
+        private bool isLoading;
 
         public SaveState SaveState;
         
@@ -25,6 +29,7 @@ namespace Managers
             if (isSaving)
                 return;
 
+            SavingAction?.Invoke(true);
             isSaving = true;
             WaitForSave().Forget();
         }
@@ -33,6 +38,7 @@ namespace Managers
         {
             await Task.Delay(SaveWaitTime, destroyToken);
             Save().Forget();
+            SavingAction?.Invoke(false);
         }
 
         private UniTask Save()

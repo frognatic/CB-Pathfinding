@@ -4,14 +4,20 @@ using Managers;
 using UI.MovingUnits;
 using UI.Windows.Base;
 using UnityEngine;
+using UnityEngine.UI;
 using Utility;
 
 namespace UI.Windows
 {
     public class MainWindow : Window
     {
+        [Header("Set as leader displays")]
         [SerializeField] private SetAsLeaderDisplay setLeaderPrefab;
         [SerializeField] private Transform setLeaderContent;
+
+        [Header("Save / load buttons")] 
+        [SerializeField] private Button saveButton;
+        [SerializeField] private Button loadButton;
 
         private readonly List<SetAsLeaderDisplay> setAsLeaderDisplayList = new();
         
@@ -19,6 +25,21 @@ namespace UI.Windows
         {
             base.OnOpen();
             InitLeaderDisplays();
+            
+            SaveManager.SavingAction += SaveManagerOnSavingAction;
+        }
+
+        public override void OnClose()
+        {
+            base.OnClose();
+            
+            SaveManager.SavingAction -= SaveManagerOnSavingAction;
+        }
+
+        private void SaveManagerOnSavingAction(bool isSaving)
+        {
+            saveButton.interactable = !isSaving;
+            loadButton.interactable = !isSaving;
         }
 
         private void InitLeaderDisplays()

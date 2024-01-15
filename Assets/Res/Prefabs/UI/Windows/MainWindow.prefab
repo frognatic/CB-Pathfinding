@@ -709,6 +709,8 @@ MonoBehaviour:
   windowType: 0
   setLeaderPrefab: {fileID: 8868578815490373970, guid: df6fcfa081dcc8c4daca3477ab5617cd, type: 3}
   setLeaderContent: {fileID: 2534415396596895553}
+  saveButton: {fileID: 1269183612753997035}
+  loadButton: {fileID: 8759440280425140099}
 --- !u!223 &1192215047729155377
 Canvas:
   m_ObjectHideFlags: 0

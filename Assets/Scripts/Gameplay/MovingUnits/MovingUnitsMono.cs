@@ -17,7 +17,6 @@ namespace Gameplay.MovingUnits
 
         private float unitHeight;
         private LayerMask terrainLayerMask;
-        private LayerMask unitLayerMask;
         
         private Vector3 targetPosition;
 
@@ -47,7 +46,6 @@ namespace Gameplay.MovingUnits
         {
             unitHeight = transform.position.y;
             terrainLayerMask = LayerMask.NameToLayer("Terrain");
-            unitLayerMask = LayerMask.NameToLayer("Units");
         }
 
         private void Update()

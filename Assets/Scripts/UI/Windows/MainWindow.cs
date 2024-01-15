@@ -25,6 +25,7 @@ namespace UI.Windows
         {
             base.OnOpen();
             InitLeaderDisplays();
+            LoadButtonInteractionStatus();
             
             SaveManager.SavingAction += SaveManagerOnSavingAction;
         }
@@ -36,10 +37,12 @@ namespace UI.Windows
             SaveManager.SavingAction -= SaveManagerOnSavingAction;
         }
 
+        private void LoadButtonInteractionStatus() => loadButton.interactable = SaveManager.Instance.HasSave();
+
         private void SaveManagerOnSavingAction(bool isSaving)
         {
             saveButton.interactable = !isSaving;
-            loadButton.interactable = !isSaving;
+            loadButton.interactable = !isSaving && SaveManager.Instance.HasSave();
         }
 
         private void InitLeaderDisplays()

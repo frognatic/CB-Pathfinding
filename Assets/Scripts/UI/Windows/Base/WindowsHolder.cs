@@ -14,10 +14,8 @@ namespace UI.Windows.Base
 
         private void AddWindowsToManagerList()
         {
-            foreach (var window in windows)
-            {
+            foreach (var window in windows) 
                 WindowManager.Instance.AddWindow(window);
-            }
         }
     
         [Button("Refill List")]

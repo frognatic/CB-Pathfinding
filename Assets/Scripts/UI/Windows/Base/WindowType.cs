@@ -1,8 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-public enum WindowType
+namespace UI.Windows.Base
 {
-    MainWindow
+    public enum WindowType
+    {
+        MainWindow
+    }
 }

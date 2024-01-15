@@ -4,7 +4,6 @@ using Cysharp.Threading.Tasks;
 using Managers.Singleton;
 using Pathfinding;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace Managers
 {

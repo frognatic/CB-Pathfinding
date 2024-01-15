@@ -18,7 +18,20 @@ namespace Gameplay.CameraControl
             
             Vector3 position = camTransform.right * (input.x * movingSpeed);
             position += camTransform.up * (input.z * movingSpeed);
-            camTransform.position += position * Time.deltaTime;
+            
+            Vector3 camPos = camTransform.position;
+            camPos += position * Time.deltaTime;
+            camPos = ClampCameraPos(camPos);
+            camTransform.position = camPos;
+        }
+
+        private Vector3 ClampCameraPos(Vector3 posToClamp)
+        {
+            float x = Mathf.Clamp(posToClamp.x, -40, 10);
+            float y = Mathf.Clamp(posToClamp.y, 5, 30);
+            float z = Mathf.Clamp(posToClamp.z, -40, 30);
+
+            return new Vector3(x, y, z);
         }
     }
 }

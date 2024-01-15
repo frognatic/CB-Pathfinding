@@ -14,6 +14,8 @@ namespace Gameplay.MovingUnits
         [SerializeField] private MovingUnitsMono movingUnitsPrefab;
         [SerializeField] private Transform movingUnitsContent;
 
+        private const float ClickRaycastDistance = 100f;
+        
         private readonly List<MovingUnitsMono> movingUnitsMonoList = new();
         
         private Camera mainCamera;
@@ -53,11 +55,16 @@ namespace Gameplay.MovingUnits
                 return;
             
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            if (!Physics.Raycast(ray, out destinationHit, 100)) 
+            if (!Physics.Raycast(ray, out destinationHit, ClickRaycastDistance)) 
                 return;
 
+            if (!IsDestinationWalkable())
+                return;
+            
             MoveUnits();
         }
+
+        private bool IsDestinationWalkable() => leader.GetNode(destinationHit.point).IsWalkable;
 
         private void MoveUnits()
         {

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Managers;
+using Pathfinding;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -83,10 +84,22 @@ namespace Gameplay.MovingUnits
 
         private Vector3 GetPosition() => transform.position;
 
-        public void UpdatePath(RaycastHit hit)
+        public void SetPathToDestination(RaycastHit hit)
         {
             SetTargetPosition(hit.point);
             AddHitPointAsFinalDestination(hit);
+        }
+
+        public void SetPathToDestination(Vector3 pos)
+        {
+            SetTargetPosition(pos);
+            int elementsCount = pathVectorList.Count;
+            pathVectorList[elementsCount - 1] = pos;
+        }
+
+        public PathfindingNode GetNode(Vector3 targetPos)
+        {
+            return PathfindingManager.Instance.GetNode(targetPos);
         }
         
         private void SetTargetPosition(Vector3 targetPosition)
@@ -107,5 +120,6 @@ namespace Gameplay.MovingUnits
         }
 
         public void MarkAsLeader(IMovingUnits movingUnits) => leaderCrown.SetActive(movingUnit == movingUnits);
+        public bool IsLeader => movingUnit.IsLeader;
     }
 }

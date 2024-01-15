@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using Managers.Singleton;
 using Pathfinding;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Managers
 {
@@ -32,8 +33,8 @@ namespace Managers
 
         public List<Vector3> FindPath(Vector3 startPos, Vector3 targetPos)
         {
-            PathfindingNode startNode = grid.GetNode(startPos);
-            PathfindingNode targetNode = grid.GetNode(targetPos);
+            PathfindingNode startNode = GetNode(startPos);
+            PathfindingNode targetNode = GetNode(targetPos);
 
             openSet = new List<PathfindingNode>();
             closedSet = new HashSet<PathfindingNode>();
@@ -63,6 +64,8 @@ namespace Managers
 
             return null;
         }
+        
+        public PathfindingNode GetNode(Vector3 pos) => grid.GetNode(pos);
 
         private void CalculateMoveToNeighbourCosts(PathfindingNode currentNode, PathfindingNode targetNode)
         {
@@ -82,6 +85,12 @@ namespace Managers
                 if (!openSet.Contains(neighbour))
                     openSet.Add(neighbour);
             }
+        }
+        
+        public List<Vector3> GetFollowersDestinations(PathfindingNode hitNode, int amount)
+        {
+            PathfindingNeighboursDestination pathfindingNeighboursDestination = new(hitNode, amount);
+            return pathfindingNeighboursDestination.GetDestinations();
         }
         
         private List<Vector3> CalculatedPath(PathfindingNode startNode, PathfindingNode endNode)

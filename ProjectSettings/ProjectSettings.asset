@@ -735,7 +735,7 @@ PlayerSettings:
   webGLMemoryGeometricGrowthCap: 96
   webGLPowerPreference: 2
   scriptingDefineSymbols:
-    Standalone: DRAW_PATHFINDING_GIZMOS
+    Standalone: DRAW_PATHFINDING_GIZMOS;LOAD_SAVE_FROM_FILE
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend: {}

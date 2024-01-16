@@ -17,6 +17,7 @@ namespace Managers
 
         public void Load()
         {
+#if UNITY_EDITOR
             scriptable = AssetDatabase.LoadAssetAtPath<SaveSO>(SaveSO.Path);
             if (!scriptable)
             {
@@ -24,13 +25,16 @@ namespace Managers
                 AssetDatabase.CreateAsset(scriptable, SaveSO.Path);
                 AssetDatabase.SaveAssets();
             }
+#endif
         }
     
         public void Save(SaveState state)
         {
+#if UNITY_EDITOR  
             scriptable.save = JsonUtility.FromJson<SaveState>(JsonUtility.ToJson(state));
             EditorUtility.SetDirty(scriptable);
             AssetDatabase.SaveAssetIfDirty(scriptable);
+#endif
         }
     }
 }
